@@ -1,4 +1,5 @@
-GET https://i3v0pggid5.execute-api.us-east-1.amazonaws.com/prod/spaces
+ GET https://i3v0pggid5.execute-api.us-east-1.amazonaws.com/prod/spaces
 ###
 
 POST https://i3v0pggid5.execute-api.us-east-1.amazonaws.com/prod/spaces
+###
