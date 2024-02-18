@@ -1,3 +1,3 @@
 import { handler } from "../src/services/spaces/handler";
 
-handler({} as any , {} as any )
+handler({} as any, {} as any);
