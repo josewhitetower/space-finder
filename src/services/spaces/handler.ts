@@ -1,18 +1,13 @@
-import {
-    APIGatewayProxyEvent,
-    APIGatewayProxyResult,
-    Context,
-} from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { postSpaces } from "./PostSpaces";
 
-const ddbClient = new DynamoDBClient({ region: process.env.AWS_REGION });
+const ddbClient = new DynamoDBClient({
+    region: process.env.AWS_REGION
+});
 
-async function handler(
-    event: APIGatewayProxyEvent,
-    context: Context
-): Promise<APIGatewayProxyResult> {
-    let message: string;
+async function handler(event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> {
+    let message: string
 
     try {
         switch (event.httpMethod) {
