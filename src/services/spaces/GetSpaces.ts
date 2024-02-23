@@ -1,6 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { DynamoDBClient, GetItemCommand, PutItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
 import { v4 } from "uuid";
+import { unmarshall } from "@aws-sdk/util-dynamodb";
 
 export async function getSpaces(
     event: APIGatewayProxyEvent,
@@ -20,7 +21,7 @@ export async function getSpaces(
                 })
             )
             if (result.Item) {
-                return { statusCode: 200, body: JSON.stringify(result.Item) };
+                return { statusCode: 200, body: JSON.stringify(unmarshall(result.Item)) };
             } else {
                 return { statusCode: 404, body: JSON.stringify({ message: "Space not found" }) };
             }
@@ -36,6 +37,7 @@ export async function getSpaces(
 
         })
     );
-    console.log({ results: results.Items.map((item) => ({ id: item.id.S, location: item.location.S })) });
-    return { statusCode: 201, body: JSON.stringify(results.Items) };
+    const unmarshalledItems = results.Items.map((item) => (unmarshall(item)));
+    console.log({ results: unmarshalledItems });
+    return { statusCode: 201, body: JSON.stringify(unmarshalledItems) };
 }
