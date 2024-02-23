@@ -6,3 +6,5 @@ content-type: application/json
 
 {"location": "Berlin 3"}
 ###
+
+GET  https://ev4w443k4g.execute-api.eu-central-1.amazonaws.com/prod/prod/spaces?id=1
