@@ -5,7 +5,6 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 
 export async function updateSpace(event: APIGatewayProxyEvent, ddbClient: DynamoDBClient): Promise<APIGatewayProxyResult> {
 
-
     if (event.queryStringParameters && ('id' in event.queryStringParameters) && event.body) {
 
         const parsedBody = JSON.parse(event.body);
@@ -27,7 +26,7 @@ export async function updateSpace(event: APIGatewayProxyEvent, ddbClient: Dynamo
             ExpressionAttributeNames: {
                 '#zzzNew': requestBodyKey
             },
-            ReturnValues: 'UPDATED_NEW'
+            ReturnValues: 'UPDATED_NEW' // return values of the updated item
         }));
 
         return {
