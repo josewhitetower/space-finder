@@ -16,7 +16,7 @@ export async function deleteSpace(event: APIGatewayProxyEvent, ddbClient: Dynamo
 
         return {
             statusCode: 200,
-            body: JSON.stringify(`Deleted space with id ${spaceId}`)
+            body: JSON.stringify({ message: `Deleted space with id ${spaceId}` })
         }
 
     }
