@@ -1,15 +1,15 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
-import { v4 } from "uuid";
 import { marshall } from "@aws-sdk/util-dynamodb";
 import { validateAsSpaceEntry } from "../shared/Validators";
+import { createRandomId, parseJSON } from "../shared/Utils";
 
 export async function postSpaces(
     event: APIGatewayProxyEvent,
     ddbClient: DynamoDBClient
 ): Promise<APIGatewayProxyResult> {
-    const randomId = v4();
-    const item = JSON.parse(event.body);
+    const randomId = createRandomId()
+    const item = parseJSON(event.body);
     item.id = randomId;
     validateAsSpaceEntry(item)
     const result = await ddbClient.send(
@@ -21,3 +21,5 @@ export async function postSpaces(
     console.log({ result });
     return { statusCode: 201, body: JSON.stringify({ id: randomId }) };
 }
+
+
