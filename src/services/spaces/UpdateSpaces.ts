@@ -1,4 +1,5 @@
 import { DynamoDBClient, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
+import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 
 
@@ -29,15 +30,17 @@ export async function updateSpace(event: APIGatewayProxyEvent, ddbClient: Dynamo
             ReturnValues: 'UPDATED_NEW' // return values of the updated item
         }));
 
+        console.log({ updateResult: updateResult.Attributes });
+
         return {
-            statusCode: 204,
-            body: JSON.stringify(updateResult.Attributes)
+            statusCode: 200,
+            body: `Updated ${JSON.stringify(unmarshall(updateResult.Attributes))}`
         }
 
     }
     return {
         statusCode: 400,
-        body: JSON.stringify('Please provide right args!!')
+        body: JSON.stringify(`Please provide right args!! ${event.queryStringParameters} ${event.body}`)
     }
 
 }

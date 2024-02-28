@@ -4,13 +4,14 @@ GET  https://ev4w443k4g.execute-api.eu-central-1.amazonaws.com/prod/spaces
 POST https://ev4w443k4g.execute-api.eu-central-1.amazonaws.com/prod/spaces
 content-type: application/json
 
-{"location": "Berlin 3"}
+{"location": "Berlin 4", "name": "Space 3"}
 ###
 
 GET  https://ev4w443k4g.execute-api.eu-central-1.amazonaws.com/prod/spaces?id=d9d01dfd-cae6-4bdc-87d4-f526d68119e7
 ###
 
-PUT https://ev4w443k4g.execute-api.eu-central-1.amazonaws.com/prod/spaces?id=85c9be21-9c67-498d-926e-6f98afac77f
+PUT https://ev4w443k4g.execute-api.eu-central-1.amazonaws.com/prod/spaces?id=f2c5c487-60d5-4deb-9c80-2caa87e2ad7b
 content-type: application/json
-{"location": "Paris2233"}
+
+{"location": "Berlin 4"}
 ###
