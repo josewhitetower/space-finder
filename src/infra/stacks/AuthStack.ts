@@ -1,6 +1,7 @@
 import { Construct } from 'constructs'
 import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib'
-import { UserPool, UserPoolClient } from 'aws-cdk-lib/aws-cognito';
+import { CfnUserPoolGroup, UserPool, UserPoolClient } from 'aws-cdk-lib/aws-cognito';
+import { CfnUserGroup } from 'aws-cdk-lib/aws-elasticache';
 
 
 export class AuthStack extends Stack {
@@ -11,6 +12,7 @@ export class AuthStack extends Stack {
         super(scope, id, props);
         this.createUserPool()
         this.createUserPoolClient()
+        this.createAdminsGroup()
 
     }
 
@@ -39,6 +41,13 @@ export class AuthStack extends Stack {
 
         new CfnOutput(this, 'SpaceUserPoolClientId', {
             value: this.userPoolClient.userPoolClientId
+        })
+    }
+
+    private createAdminsGroup() {
+        new CfnUserPoolGroup(this, 'SpacesAdmins', {
+            userPoolId: this.userPool.userPoolId,
+            groupName: 'admins'
         })
     }
 }
