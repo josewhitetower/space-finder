@@ -3,12 +3,14 @@ import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
 import { fromCognitoIdentity, fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
 import { Amplify } from "aws-amplify";
 
+import * as config from './../cdk-outputs.json'
+
 Amplify.configure({
     Auth: {
         Cognito: {
-            userPoolId: 'eu-central-1_gis1IUKuD',
-            userPoolClientId: 'iqaca37aersnimt07e7op2rqu',
-            identityPoolId: 'eu-central-1:bf412efa-964b-4000-932b-60ee8573bf54'
+            userPoolId: config.AuthStack.UserPoolId,
+            userPoolClientId: config.AuthStack.SpaceUserPoolClientId,
+            identityPoolId: config.AuthStack.SpaceIdentityPoolId,
         },
     }
 })
@@ -24,11 +26,13 @@ export class AuthService {
         return { result, jwtToken };
     }
 
+
     public async generateTemporaryCredentials(jwtToken: string) {
+        const loginKey = `cognito-idp.${process.env.AWS_REGION}.amazonaws.com/${config.AuthStack.UserPoolId}`;
         const credentials = fromCognitoIdentityPool({
-            identityPoolId: 'eu-central-1:bf412efa-964b-4000-932b-60ee8573bf54',
+            identityPoolId: config.AuthStack.SpaceIdentityPoolId,
             logins: {
-                'cognito-idp.eu-central-1.amazonaws.com/eu-central-1_gis1IUKuD': jwtToken
+                [loginKey]: jwtToken
             }
         });
         return credentials();
