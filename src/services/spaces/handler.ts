@@ -1,40 +1,42 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
 import { postSpaces } from "./PostSpaces";
 import { getSpaces } from "./GetSpaces";
-import { updateSpace } from "./UpdateSpaces";
-import { deleteSpace } from "./DeleteSpaces";
-import { JSONError, MissingFieldError } from "../shared/Validators";
 
-const ddbClient = new DynamoDBClient({
-    region: process.env.AWS_REGION
-});
+import { addCorsHeader } from "../shared/Utils";
+import { MissingFieldError, JSONError } from "../shared/Validators";
+import { deleteSpace } from "./DeleteSpaces";
+import { updateSpace } from "./UpdateSpaces";
+
+
+const ddbClient = new DynamoDBClient({});
 
 async function handler(event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> {
-    let message: string
+
+    let response: APIGatewayProxyResult;
 
     try {
         switch (event.httpMethod) {
-            case "GET":
+            case 'GET':
                 const getResponse = await getSpaces(event, ddbClient);
-                console.log({ getResponse });
-                return getResponse;
-            case "POST":
+                response = getResponse;
+                break;
+            case 'POST':
                 const postResponse = await postSpaces(event, ddbClient);
-                return postResponse;
-            case "PUT":
+                response = postResponse;
+                break;
+            case 'PUT':
                 const putResponse = await updateSpace(event, ddbClient);
-                console.log(putResponse)
-                return putResponse;
-            case "DELETE":
+                response = putResponse;
+                break;
+            case 'DELETE':
                 const deleteResponse = await deleteSpace(event, ddbClient);
-                console.log(deleteResponse)
-                return deleteResponse;
+                response = deleteResponse;
+                break;
             default:
                 break;
         }
-    }
-    catch (error) {
+    } catch (error) {
         if (error instanceof MissingFieldError) {
             return {
                 statusCode: 400,
@@ -51,8 +53,9 @@ async function handler(event: APIGatewayProxyEvent, context: Context): Promise<A
             statusCode: 500,
             body: error.message
         }
-
     }
+    addCorsHeader(response);
+    return response;
 }
 
-export { handler };
+export { handler }
